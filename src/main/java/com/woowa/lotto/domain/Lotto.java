@@ -43,7 +43,14 @@ public class Lotto {
     }
 
     // 당첨 번호와 몇 개가 일치하는 확인해서 일치하는 개수를 돌려주는 메서드
-//    public int matchCount() {
-//
-//    }
+    public int matchCount(Lotto otherLotto) {
+        List<Integer> otherNumbers = otherLotto.getNumbers();
+
+        long count = this.numbers.stream()
+                .filter(otherNumbers::contains)
+                .count();
+        return (int) count;
+    }
+
+    public List<Integer> getNumbers() {return numbers;}
 }
