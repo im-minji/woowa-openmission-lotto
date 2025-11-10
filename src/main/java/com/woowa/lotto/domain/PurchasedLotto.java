@@ -4,10 +4,25 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
+import jakarta.persistence.*;
 
+@Entity
 public class PurchasedLotto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "lotto_id")
     private final Lotto purchasedLotto;
+
+    @Column
     private final LocalDate purchaseDate;
+
+    protected  PurchasedLotto() {
+        this.purchasedLotto = null;
+        this.purchaseDate = null;
+    }
 
     public PurchasedLotto(Lotto purchasedLotto, LocalDate purchaseDate) {
         this.purchasedLotto = Objects.requireNonNull(purchasedLotto, "[ERROR] 로또가 비워져 있습니다.");
@@ -31,4 +46,5 @@ public class PurchasedLotto {
 
     public Lotto getPurchasedLotto() {return purchasedLotto;}
     public LocalDate getPurchaseDate() {return purchaseDate;}
+    public Long getId() {return id;}
 }

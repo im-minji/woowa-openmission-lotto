@@ -1,15 +1,29 @@
 package com.woowa.lotto.domain;
 
 import java.util.List;
+import jakarta.persistence.*;
 
+@Entity
 public class Lotto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     // 로또 한장을 저장하는 객체
+    @ElementCollection
+    @CollectionTable(name = "lotto_numbers", joinColumns = @JoinColumn(name = "lotto_id"))
     private final List<Integer> numbers;
+
+    protected Lotto() {
+        this.numbers = null;
+    }
 
     public Lotto(List<Integer> numbers) {
         validate(numbers);
         this.numbers = numbers;
     }
+
+
 
     // 이 객체는 로또 한 장에 해당하는 데이터를 이용해 검증, 보너스 숫자 존재, 당첨번호와 몇 개 일치하는 지 스스로 확인
     private void validate(List<Integer> numbers) {
@@ -35,10 +49,6 @@ public class Lotto {
     // TODO: 추가 기능 구현
     // 보너스 번호가 리스트 중에 존재하는지 확인해서 true/false 를 돌려주는 메서드
     public boolean hasBonusNum(int bonusNum) {
-//        if(numbers.contains(bonusNum)) {
-//            return true;
-//        }
-//        return false;
         return numbers.contains(bonusNum);
     }
 
@@ -53,4 +63,6 @@ public class Lotto {
     }
 
     public List<Integer> getNumbers() {return numbers;}
+
+    public Long getId() {return id;}
 }
