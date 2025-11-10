@@ -16,7 +16,7 @@ public class WinningLotto {
     }
 
     // 보너스 번호를 가지는 객체이므로 보너스 번호에 대한 검증은 winningLotto가 해야함
-    void validate(Lotto winningLotto, int bonusNum) {
+    private void validate(Lotto winningLotto, int bonusNum) {
         if(bonusNum < 1 || bonusNum > 45) {
             throw new IllegalArgumentException("[ERROR] 보너스 번호의 범위는 1~45여야 합니다.");
         }

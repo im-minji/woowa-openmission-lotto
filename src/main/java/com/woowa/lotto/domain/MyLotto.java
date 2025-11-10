@@ -24,3 +24,4 @@ public class MyLotto {
     public Lotto getMyLotto() {return myLotto;}
     public String getLottoName() {return lottoName;}
 }
+
