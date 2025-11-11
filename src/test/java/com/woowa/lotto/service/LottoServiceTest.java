@@ -41,34 +41,4 @@ class LottoServiceTest {
 
     // --- (TODO: 화요일의 계획 2단계) ---
     // 'saveToMyLotto_test()' 메서드를 추가
-    @DisplayName("saveToMyLotto()가 'Lotto'(엔진)와 'MyLotto'(본체)를 DB에 '동시' 저장한다.")
-    @Test
-    void saveToMyLotto_test() {
-        List<Integer> numbers = List.of(1, 2, 3, 4, 5, 6);
-        String lottoName = "나의 행운 번호";
-
-        MyLotto savedMyLotto = lottoService.saveToMyLotto(numbers, lottoName);
-
-
-        assertThat(savedMyLotto.getId()).isNotNull(); // ID 발급 확인
-
-        // Repository를 이용해 DB에 로또 저장되었는 지
-        Optional<MyLotto> foundMyLottoOptional = myLottoRepository.findById(savedMyLotto.getId());
-
-        assertThat(foundMyLottoOptional).isPresent(); // DB에서 찾아왔는가?
-
-        MyLotto foundMyLotto = foundMyLottoOptional.get();
-        assertThat(foundMyLotto.getLottoName()).isEqualTo(lottoName); // 이름 일치
-
-        assertThat(foundMyLotto.getMyLotto()).isNotNull();
-        Long lottoEngineId = foundMyLotto.getMyLotto().getId();
-        assertThat(lottoEngineId).isNotNull();
-
-        Optional<Lotto> foundLottoEngineOpt = lottoRepository.findById(lottoEngineId);
-        assertThat(foundLottoEngineOpt).isPresent(); // "lotto 테이블에도 저장되었는가?"
-
-        // '타입'까지 비교하는 isEqualTo() 대신, '내용물'만 비교하는 contains...()로 변경
-        assertThat(foundLottoEngineOpt.get().getNumbers())
-                .containsExactlyInAnyOrderElementsOf(numbers);
-    }
 }

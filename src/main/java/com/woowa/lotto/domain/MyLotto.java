@@ -9,8 +9,8 @@ public class MyLotto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL) // MyLotto가 저장/삭제될 때, Lotto도 같이 저장/삭제
-    @JoinColumn(name = "lotto_id")
+    @Embedded
+    // [제거] @JoinColumn은 @Embedded와 함께 사용되지 않으므로 제거
     private final Lotto myLotto;
 
     @Column
