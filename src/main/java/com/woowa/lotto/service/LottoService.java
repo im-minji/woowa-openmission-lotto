@@ -31,12 +31,10 @@ public class LottoService {
      * (DB 저장 X)
      */
     @Transactional(readOnly = true)
-    // [수정] 반환 타입 LottoResponseDTO -> RandomLottoResponseDTO
     public RandomLottoResponseDTO generateRandomLotto() {
         List<Integer> numbers = Randoms.pickUniqueNumbersInRange(1, 45, 6);
         Lotto lotto = new Lotto(numbers); // Lotto 값 객체 생성 (검증 포함)
-
-        // Entity(Lotto) 대신 DTO(RandomLottoResponseDTO)를 반환합니다.
+        // Entity(Lotto) 대신 DTO(RandomLottoResponseDTO)를 반환
         return RandomLottoResponseDTO.from(lotto);
     }
 

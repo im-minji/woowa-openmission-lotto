@@ -2,6 +2,7 @@ package com.woowa.lotto.domain;
 
 import java.util.List;
 import jakarta.persistence.*;
+import java.util.stream.Collectors;
 
 // [수정] @Entity -> @Embeddable로 변경
 // Lotto는 이제 다른 엔티티에 포함되는 값 객체
@@ -18,7 +19,10 @@ public class Lotto {
 
     public Lotto(List<Integer> numbers) {
         validate(numbers);
-        this.numbers = numbers;
+
+        this.numbers = numbers.stream()
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     // 이 객체는 로또 한 장에 해당하는 데이터를 이용해 검증, 보너스 숫자 존재, 당첨번호와 몇 개 일치하는 지 스스로 확인
@@ -59,6 +63,4 @@ public class Lotto {
     }
 
     public List<Integer> getNumbers() {return numbers;}
-
-    // [제거] ID 필드 관련 getter를 제거
 }
