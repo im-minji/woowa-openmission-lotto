@@ -1,12 +1,12 @@
 package com.woowa.lotto.controller;
 
-import com.woowa.lotto.domain.Lotto;
 import com.woowa.lotto.dto.request.MyLottoRequestDTO;
+import com.woowa.lotto.dto.request.PurchasedLottoRequestDTO;
 import com.woowa.lotto.dto.response.MyLottoResponseDTO;
+import com.woowa.lotto.dto.response.PurchasedLottoResponseDTO;
 import com.woowa.lotto.dto.response.RandomLottoResponseDTO;
 import com.woowa.lotto.service.LottoService;
 import java.util.List;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LottoController {
     private final LottoService lottoService;
 
+    // MyLotto
     @GetMapping("/lotto/random")
     public RandomLottoResponseDTO getRandomLotto() {
         return lottoService.generateRandomLotto();
@@ -43,4 +44,27 @@ public class LottoController {
     public void deleteMyLotto(@PathVariable Long myLottoId) {
         lottoService.deleteMyLotto(myLottoId);
     }
+
+
+    // PusrchasedLotto
+    @PostMapping("/purchase/manual")
+    public PurchasedLottoResponseDTO purchaseManualLotto(@RequestBody PurchasedLottoRequestDTO requestDTO) {
+        return lottoService.purchaseManualLotto(requestDTO);
+    }
+
+    @PostMapping("/purchase/from-my-lotto/{myLottoId}")
+    public PurchasedLottoResponseDTO purchasedMyLotto (@PathVariable Long myLottoId) {
+        return lottoService.purchaseFromMyLotto(myLottoId);
+    }
+
+    @GetMapping("/purchase")
+    public List<PurchasedLottoResponseDTO> readAllPurchasedLotto() {
+        return lottoService.findAllPurchasedLotto();
+    }
+
+    @DeleteMapping("/purchase/{purchaseId}")
+    public void deletePurchasedLotto(@PathVariable Long purchaseId) {
+        lottoService.deletePurchasedLotto(purchaseId);
+    }
+
 }
