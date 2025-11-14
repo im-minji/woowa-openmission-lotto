@@ -11,7 +11,8 @@ public class WinningLotto {
     private Long id;
 
     // 당첨 번호를 가지는 객체 (6개 번호 + 1개의 보너스 번호)
-    @OneToOne(cascade = CascadeType.ALL)
+    // [수정] @OneToOne -> @Embedded로 변경
+    @Embedded
     private final Lotto winningLotto;
 
     @Column

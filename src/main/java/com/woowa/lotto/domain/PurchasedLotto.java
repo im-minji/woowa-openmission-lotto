@@ -12,8 +12,9 @@ public class PurchasedLotto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "lotto_id")
+    // [수정] @OneToOne -> @Embedded로 변경
+    @Embedded
+    // [제거] @JoinColumn은 @Embedded와 함께 사용되지 않으므로 제거
     private final Lotto purchasedLotto;
 
     @Column

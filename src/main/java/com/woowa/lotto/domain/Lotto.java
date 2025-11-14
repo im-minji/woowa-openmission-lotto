@@ -2,16 +2,15 @@ package com.woowa.lotto.domain;
 
 import java.util.List;
 import jakarta.persistence.*;
+import java.util.stream.Collectors;
 
-@Entity
+// [수정] @Entity -> @Embeddable로 변경
+// Lotto는 이제 다른 엔티티에 포함되는 값 객체
+@Embeddable
 public class Lotto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    // 로또 한장을 저장하는 객체
+    // [수정] @CollectionTable 어노테이션을 제거하여 JPA가 기본 전략(테이블명 자동 생성)을 사용하도록
+    // 이렇게 하면 MyLotto, PurchasedLotto 등 포함하는 엔티티별로 별도의 컬렉션 테이블이 생성
     @ElementCollection
-    @CollectionTable(name = "lotto_numbers", joinColumns = @JoinColumn(name = "lotto_id"))
     private final List<Integer> numbers;
 
     protected Lotto() {
@@ -20,10 +19,11 @@ public class Lotto {
 
     public Lotto(List<Integer> numbers) {
         validate(numbers);
-        this.numbers = numbers;
+
+        this.numbers = numbers.stream()
+                .sorted()
+                .collect(Collectors.toList());
     }
-
-
 
     // 이 객체는 로또 한 장에 해당하는 데이터를 이용해 검증, 보너스 숫자 존재, 당첨번호와 몇 개 일치하는 지 스스로 확인
     private void validate(List<Integer> numbers) {
@@ -63,6 +63,4 @@ public class Lotto {
     }
 
     public List<Integer> getNumbers() {return numbers;}
-
-    public Long getId() {return id;}
 }
