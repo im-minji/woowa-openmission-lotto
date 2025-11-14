@@ -2,6 +2,7 @@ package com.woowa.lotto.service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -74,49 +75,30 @@ public class LottoService {
         myLottoRepository.deleteById(myLottoId);
     }
 
-    // TODO: 3. 구매 번호 리스트 (Purchases) 기능
+    // --- 3. 구매 번호 리스트 (Purchases) 기능 ---
 
-    //[Service] '수동' 번호로 로또 구매
+    // [Service] '수동' 번호로 로또 구매 (날짜 선택 가능)
+    // [수정] 중복되었던 메서드 중 '최신 버전'만 남김
     public PurchasedLottoResponseDTO purchaseManualLotto(PurchasedLottoRequestDTO request) {
         Lotto lotto = new Lotto(request.getNumbers());
-        // 공통 구매 로직 호출
-        return purchaseLottoInternal(lotto);
+        // DTO에서 날짜를 꺼내서 공통 로직으로 전달
+        return purchaseLottoInternal(lotto, request.getPurchaseDate());
     }
 
-    // [Service] '나만의 로또'에서 '복사'하여 로또 구매
+    // [Service] '나만의 로또'에서 '복사'하여 로또 구매 (오늘 날짜로 구매)
     public PurchasedLottoResponseDTO purchaseFromMyLotto(Long myLottoId) {
         // 1. '나만의 로또'를 DB에서 찾는다. (없으면 예외 발생)
         MyLotto myLotto = myLottoRepository.findById(myLottoId)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 '나만의 로또' ID입니다: " + myLottoId));
 
-        // 2. 수정!! Lotto 객체를 공유하지 않고, 번호만 읽어오기
+        // 2. Lotto 객체를 공유하지 않고, 번호만 읽어오기
         List<Integer> numbersToCopy = myLotto.getMyLotto().getNumbers();
 
         // 3. 그 번호로 새로운 Lotto 값 객체를 생성 (복사)
         Lotto newLotto = new Lotto(numbersToCopy);
 
-        // 4. 새로운 Lotto 객체로 구매 로직을 호출
-        return purchaseLottoInternal(newLotto);
-    }
-
-
-    /**
-     * 로또 구매 공통 로직
-     * - 어떤 방식(수동/복사)이든, 'Lotto' 객체를 받아서
-     * - '오늘 날짜'를 찍고 'PurchasedLotto' 엔티티로 저장
-     */
-    private PurchasedLottoResponseDTO purchaseLottoInternal(Lotto lotto) {
-        // 1. '구매 날짜'는 서비스에서 오늘 날짜로 생성
-        LocalDate today = LocalDate.now();
-
-        // 2. '구매한 로또' 엔티티 생성
-        PurchasedLotto purchasedLotto = new PurchasedLotto(lotto, today);
-
-        // 3. DB에 저장
-        PurchasedLotto savedLotto = purchasedLottoRepository.save(purchasedLotto);
-
-        // 4. "영수증" DTO로 변환하여 반환
-        return PurchasedLottoResponseDTO.from(savedLotto);
+        // 4. [수정] '오늘 날짜'와 함께 새로운 공통 로직 호출
+        return purchaseLottoInternal(newLotto, LocalDate.now());
     }
 
     // 구매 로또 조회
@@ -129,7 +111,6 @@ public class LottoService {
                 .collect(Collectors.toList());
     }
 
-
     // 구매 로또 삭제
     public void deletePurchasedLotto(Long purchasedLottoId) {
         // 삭제 전, 존재하는 ID인지 확인
@@ -138,5 +119,20 @@ public class LottoService {
         }
         purchasedLottoRepository.deleteById(purchasedLottoId);
     }
+
+    /**
+     * [Internal] 로또 구매 공통 로직
+     * [수정] 'purchaseDate'를 파라미터로 받도록 변경
+     */
+    private PurchasedLottoResponseDTO purchaseLottoInternal(Lotto lotto, LocalDate purchaseDate) {
+        // [수정] DTO에서 받은 날짜가 null이 아닌지 확인
+        Objects.requireNonNull(purchaseDate, "[ERROR] 구매 날짜는 null일 수 없습니다.");
+
+        // DTO에서 받은 날짜를 사용
+        PurchasedLotto purchasedLotto = new PurchasedLotto(lotto, purchaseDate);
+        PurchasedLotto savedLotto = purchasedLottoRepository.save(purchasedLotto);
+        return PurchasedLottoResponseDTO.from(savedLotto);
+    }
+
     // TODO: 4. 당첨 결과 및 통계 (Statistics) 기능 구현
 }

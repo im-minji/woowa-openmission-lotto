@@ -1,5 +1,6 @@
 package com.woowa.lotto.dto.request;
 
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,4 +13,6 @@ import java.util.List;
 @NoArgsConstructor // JSON 역직렬화를 위해 기본 생성자 필요
 public class PurchasedLottoRequestDTO {
     private List<Integer> numbers;
+
+    private LocalDate purchaseDate;
 }
