@@ -89,11 +89,14 @@ public class LottoService {
         MyLotto myLotto = myLottoRepository.findById(myLottoId)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 '나만의 로또' ID입니다: " + myLottoId));
 
-        // 2. '나만의 로또'에서 Lotto (값 객체)를 '읽어온다(복사)'
-        Lotto lottoToCopy = myLotto.getMyLotto();
+        // 2. 수정!! Lotto 객체를 공유하지 않고, 번호만 읽어오기
+        List<Integer> numbersToCopy = myLotto.getMyLotto().getNumbers();
 
-        // 3. 공통 구매 로직 호출
-        return purchaseLottoInternal(lottoToCopy);
+        // 3. 그 번호로 새로운 Lotto 값 객체를 생성 (복사)
+        Lotto newLotto = new Lotto(numbersToCopy);
+
+        // 4. 새로운 Lotto 객체로 구매 로직을 호출
+        return purchaseLottoInternal(newLotto);
     }
 
 
