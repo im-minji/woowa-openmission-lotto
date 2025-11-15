@@ -1,4 +1,4 @@
-/* 1. 기본 및 폰트 설정 */
+/* 기본 및 폰트 설정 */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
 
 body {
@@ -7,18 +7,17 @@ body {
     color: #333;
     margin: 0;
     padding: 0;
-    /* [수정] body를 flex로 만들어 푸터를 하단에 고정합니다. */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-/* 2. 레이아웃 (Figma 디자인) */
+/* 레이아웃 */
 .site-header {
     width: 100%;
     background-color: #ffffff;
     border-bottom: 1px solid #e5e7eb;
-    flex-shrink: 0; /* 헤더 고정 */
+    flex-shrink: 0;
 }
 
 .navbar {
@@ -39,16 +38,14 @@ body {
     padding: 3rem 1rem;
     text-align: center;
     box-sizing: border-box;
-    /* [수정] main-content가 남은 공간을 모두 차지하도록 */
     flex-grow: 1;
 }
 
-/* 홈 화면의 내용을 가로/세로 정가운데 정렬 */
 .main-content-centered {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* 세로 정렬 */
-    align-items: center; /* 가로 정렬 */
+    justify-content: center;
+    align-items: center;
 }
 
 .site-footer {
@@ -58,10 +55,10 @@ body {
     border-top: 1px solid #e5e7eb;
     color: #9ca3af;
     font-size: 0.875rem;
-    flex-shrink: 0; /* 푸터 고정 */
+    flex-shrink: 0;
 }
 
-/* 3. 네비게이션 */
+/* 네비게이션 */
 .nav-links {
     display: flex;
     gap: 1.5rem;
@@ -81,7 +78,7 @@ body {
     height: 1.5rem;
 }
 
-/* 4. 컨텐츠 (페이지 내용) */
+/* 컨텐츠 (페이지 내용) */
 .content-subtitle {
     font-size: 1rem;
     font-weight: 500;
@@ -100,15 +97,14 @@ body {
     color: #4b5563;
     font-size: 1rem;
     margin-top: 0.5rem;
-    line-height: 1.6; /* 줄 간격 */
+    line-height: 1.6;
 }
 
 .mt-4 {
-    margin-top: 1rem; /* [신규] p 태그 사이 간격 */
+    margin-top: 1rem;
 }
 
-
-/* 5. 랜덤 로또 페이지 */
+/* 랜덤 로또 페이지 */
 .result-box {
     padding: 1.5rem;
     background-color: #f9fafb;
@@ -117,13 +113,13 @@ body {
     min-height: 50px;
     color: #6b7280;
     font-weight: 500;
-    border: 1px solid #e5e7eb; /* 테두리 추가 */
+    border: 1px solid #e5e7eb;
 }
 
 .button-group {
     display: flex;
     gap: 1rem;
-    justify-content: center; /* 버튼 그룹 가운데 정렬 */
+    justify-content: center;
 }
 
 .save-form {
@@ -152,10 +148,10 @@ body {
     padding: 0.5rem;
     border: 1px solid #d1d5db;
     border-radius: 0.5rem;
-    box-sizing: border-box;
+    box-sizing: border-box; /* 중요 */
 }
 
-/* 6. 공통 버튼 */
+
 .btn {
     font-weight: 700;
     padding: 0.5rem 1rem;
@@ -163,6 +159,8 @@ body {
     border: none;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .btn-primary {
@@ -184,4 +182,73 @@ body {
     background-color: #f3f4f6;
     color: #9ca3af;
     cursor: not-allowed;
+}
+
+/* 목록 페이지 (my-lotto.html, purchased-lotto.html) */
+.lotto-table {
+    width: 100%;
+    margin: 2rem 0;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.lotto-table th,
+.lotto-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.lotto-table th {
+    background-color: #f9fafb;
+    font-weight: 700;
+    color: #374151;
+}
+
+.lotto-table td {
+    color: #4b5563;
+}
+
+.btn-add-lotto {
+    margin-top: 1rem;
+}
+
+.btn-small {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.btn-purchase {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+.btn-purchase:hover {
+    background-color: #bfdbfe;
+}
+
+.btn-delete {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+.btn-delete:hover {
+    background-color: #fecaca;
+}
+
+
+/* 입력 페이지 (my-lotto-add.html, purchased-lotto-add.html) */
+.save-form-box {
+    width: 100%;
+    max-width: 500px; /* 폼 너비 */
+    margin: 0 auto; /* 폼 가운데 정렬 */
+    padding: 2rem;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    text-align: left; /* 폼 내부는 왼쪽 정렬 */
+}
+
+.form-group {
+    margin-bottom: 1.5rem; /* 폼 그룹간 여백 */
 }

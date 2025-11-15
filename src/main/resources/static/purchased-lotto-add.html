@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>구매 로또</title>
+    <title>구매 로또 입력</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -24,40 +24,23 @@
 </header>
 
 <main class="main-content">
-    <h1 class="content-title">구매 로또 리스트</h1>
-    <p class="content-subtitle">구매했던 로또를 기록해보세요!</p>
+    <h1 class="content-title">구매했던 번호를 저장해보세요!</h1>
 
-    <table id="purchased-lotto-table" class="lotto-table">
-        <thead>
-        <tr>
-            <th>번호(순서)</th>
-            <th>구매 일시</th>
-            <th>로또 번호</th>
-            <th>삭제</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!--
-          (아래는 임시 목업 데이터)
-        -->
-        <tr>
-            <td>1</td>
-            <td>2025-11-13</td>
-            <td>10, 11, 12, 13, 14, 15</td>
-            <td><button class="btn btn-small btn-delete" data-id="1">삭제</button></td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>2025-11-12</td>
-            <td>1, 2, 3, 4, 5, 6</td>
-            <td><button class="btn btn-small btn-delete" data-id="2">삭제</button></td>
-        </tr>
-        </tbody>
-    </table>
-
-    <a href="purchased-lotto-add.html" class="btn btn-primary btn-add-lotto">
-        구매 로또 번호 추가하기
-    </a>
+    <div class="save-form-box">
+        <!-- 나중에 이 폼을 JS가 POST /im-minji/purchase/manual 로 전송 -->
+        <form id="purchase-save-form">
+            <div class="form-group">
+                <label for="lotto-numbers" class="input-label">번호 입력 (쉼표로 구분해주세요)</label>
+                <input type="text" id="lotto-numbers" class="input-field" placeholder="예: 1, 2, 3, 4, 5, 6">
+            </div>
+            <div class="form-group">
+                <label for="purchase-date" class="input-label">구매 날짜</label>
+                <!-- 날짜 선택 입력창 -->
+                <input type="date" id="purchase-date" class="input-field">
+            </div>
+            <button type="submit" id="save-btn" class="btn btn-primary">저장하기</button>
+        </form>
+    </div>
 </main>
 
 <!-- [공통] 푸터 -->
