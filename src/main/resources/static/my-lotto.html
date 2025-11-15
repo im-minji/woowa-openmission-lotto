@@ -71,5 +71,121 @@
     <p>Copyright &copy; 2025 Im-minji</p>
 </footer>
 
+
+<!--
+  [JavaScript 코드 추가]
+-->
+<script>
+    // 1. HTML 문서가 모두 로드되면, function() 안의 코드를 실행
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // 2. <tbody> 요소를 찾기 (표 내용 요소)
+        const tableBody = document.getElementById('my-lotto-list-body');
+
+        // API 1: 나만의 로또 목록 전체를 조회하고 화면에 그리는 함수: GET으로 내용 받아오기
+        async function loadMyLottoList() {
+            try {
+                // (LottoController의 readAllMyLotto() 실행)
+                const response = await fetch('/im-minji/my-lotto');
+                if (!response.ok) {
+                    throw new Error('목록을 불러오는데 실패했습니다.');
+                }
+
+                // data = [ { "id": 1, "lottoName": "...", "numbers": [...] }, ... ]
+                const lottoList = await response.json();
+
+                // <tbody>의 HTML 내용을 비우기
+                tableBody.innerHTML = '';
+
+                if (lottoList.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="5">저장된 로또가 없습니다.</td></tr>';
+                    return;
+                }
+
+                // 3. 받아온 데이터(lottoList)로 테이블 행(<tr>)을 만들기
+                lottoList.forEach(lotto => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${lotto.id}</td>
+                        <td>${lotto.lottoName}</td>
+                        <td>${lotto.numbers.join(', ')}</td>
+                        <td>
+                            <button class="btn btn-small btn-purchase" data-id="${lotto.id}">구매</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-small btn-delete" data-id="${lotto.id}">삭제</button>
+                        </td>
+                    `;
+                    // 4. 완성된 행(row)을 <tbody>에 추가하기
+                    tableBody.appendChild(row);
+                });
+
+            } catch (error) {
+                tableBody.innerHTML = `<tr><td colspan="5" class="error-text">${error.message}</td></tr>`;
+            }
+        }
+
+
+        // API 2 & 3: '구매' 또는 '삭제' 버튼 클릭 처리 (C, D)
+        tableBody.addEventListener('click', async (event) => {
+            const clickedButton = event.target;
+            const lottoId = clickedButton.dataset.id; // data-id 속성 값 (예: "1")
+
+            if (!lottoId) {
+                return; // 버튼이 아닌 다른 곳을 클릭하면 무시
+            }
+
+            // --- API 2: '구매' 버튼 클릭 시 ---
+            if (clickedButton.classList.contains('btn-purchase')) {
+                if (!confirm(`'${lottoId}'번 로또를 '구매 내역'으로 복사하시겠습니까?\n(오늘 날짜로 저장됩니다)`)) {
+                    return;
+                }
+                try {
+                    // (LottoController의 purchasedMyLotto() 실행)
+                    const response = await fetch(`/im-minji/purchase/from-my-lotto/${lottoId}`, {
+                        method: 'POST'
+                    });
+                    if (!response.ok) {
+                        throw new Error('[ERROR] 구매에 실패했습니다.');
+                    }
+                    const savedPurchase = await response.json();
+                    alert(`구매 완료! (구매 ID: ${savedPurchase.id})`);
+                    // (구매 성공 시, 구매 목록 페이지로 이동시키는 것도 좋습니다)
+                    // window.location.href = 'purchased-lotto.html';
+
+                } catch (error) {
+                    alert(error.message);
+                }
+            }
+
+            // --- API 3: '삭제' 버튼 클릭 시 ---
+            if (clickedButton.classList.contains('btn-delete')) {
+                if (!confirm(`'${lottoId}'번 로또를 정말 삭제하시겠습니까?`)) {
+                    return;
+                }
+                try {
+                    // (LottoController의 deleteMyLotto() 실행)
+                    const response = await fetch(`/im-minji/my-lotto/${lottoId}`, {
+                        method: 'DELETE'
+                    });
+                    if (!response.ok) {
+                        throw new Error('[ERROR] 삭제에 실패했습니다.');
+                    }
+                    alert('삭제 완료!');
+
+                    // 5. 삭제 성공 시, 목록을 새로고침 (화면에 적용되어야 하기 때문에)
+                    loadMyLottoList();
+
+                } catch (error) {
+                    alert(error.message);
+                }
+            }
+        });
+
+        // 6. 페이지가 처음 열리면, 목록을 자동으로 불러오기
+        loadMyLottoList();
+    });
+</script>
+
 </body>
 </html>
