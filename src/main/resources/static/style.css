@@ -1,0 +1,113 @@
+/* 1. 기본 및 폰트 설정 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #ffffff;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.wrapper {
+    width: 100%;
+    max-width: 960px;
+    margin: 20px auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+header, main, footer {
+    width: 100%;
+    text-align: center;
+}
+
+
+.navbar {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #003458;
+    font-weight: 700;
+    margin: 0 15px;
+}
+
+.navbar a.nav-home {
+    float: right;
+}
+
+.content-box {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.content-box h1 {
+    color: #003458;
+}
+
+.result-box {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 20px 0;
+    min-height: 50px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.save-form {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* 5. 공통 컴포넌트 (버튼, 입력창) */
+.input-field {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 5px;
+}
+
+.btn {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.btn:hover {
+    background-color: #e0e0e0;
+}
+
+.btn:disabled {
+    background-color: #f9f9f9;
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+/* 6. 푸터 */
+footer {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 2px solid #eee;
+    font-size: 0.9em;
+    color: #777;
+}

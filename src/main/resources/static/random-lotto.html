@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>랜덤 로또 생성</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrapper">
+
+    <!-- 메뉴바 -->
+    <header>
+        <nav class="navbar">
+            <a href="my-lotto.html">MyLotto</a>
+            <a href="random-lotto.html">RandomLotto</a>
+            <a href="purchased-lotto.html">PurchasedLotto</a>
+            <a href="index.html" class="nav-home">홈</a>
+        </nav>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main>
+        <div class="content-box">
+            <h1>랜덤 로또 생성</h1>
+            <p>번호를 랜덤으로 생성해보세요!</p>
+
+
+            <div id="random-result-area" class="result-box">
+                <p>생성하기 버튼을 눌러주세요.</p>
+            </div>
+
+
+            <div class="button-group">
+                <button id="generate-btn" class="btn">로또 번호 생성하기</button>
+                <button id="save-btn" class="btn" disabled>MyLotto에 저장하기</button>
+            </div>
+
+
+            <div id="save-form" class="save-form hidden">
+                <label for="lotto-name">로또 이름:</label>
+                <input type="text" id="lotto-name" class="input-field" placeholder="저장할 이름을 입력하세요">
+                <button id="save-confirm-btn" class="btn">저장 확인</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Copyright &copy; 2025 Im-minji</p>
+    </footer>
+</div>
+
+<!--
+  나중에 이 파일에 필요한 JS를 여기에 추가
+-->
+</body>
+</html>
