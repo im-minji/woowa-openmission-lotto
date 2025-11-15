@@ -3,81 +3,96 @@
 
 body {
     font-family: 'Noto Sans KR', sans-serif;
-    background-color: #ffffff; /* 하얀색 배경 */
+    background-color: #ffffff;
     color: #333;
     margin: 0;
     padding: 0;
+    /* [수정] body를 flex로 만들어 푸터를 하단에 고정합니다. */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 /* 2. 레이아웃 (Figma 디자인) */
 .site-header {
     width: 100%;
     background-color: #ffffff;
-    border-bottom: 1px solid #e5e7eb; /* 연한 회색 테두리 */
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0; /* 헤더 고정 */
 }
 
 .navbar {
     width: 100%;
-    max-width: 1024px; /* 내용물 최대 너비 */
-    margin: 0 auto; /* 내용물 가운데 정렬 */
-    padding: 1rem; /* 16px */
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-sizing: border-box; /* 패딩이 너비를 늘리지 않도록 */
+    box-sizing: border-box;
 }
 
 .main-content {
     width: 100%;
     max-width: 1024px;
-    margin: 0 auto; /* 내용물 가운데 정렬 */
-    padding: 3rem 1rem; /* 위아래 여백 48px */
+    margin: 0 auto;
+    padding: 3rem 1rem;
     text-align: center;
     box-sizing: border-box;
+    /* [수정] main-content가 남은 공간을 모두 차지하도록 */
+    flex-grow: 1;
+}
+
+/* 홈 화면의 내용을 가로/세로 정가운데 정렬 */
+.main-content-centered {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 세로 정렬 */
+    align-items: center; /* 가로 정렬 */
 }
 
 .site-footer {
     width: 100%;
     text-align: center;
     padding: 2rem 1rem;
-    margin-top: 2rem;
     border-top: 1px solid #e5e7eb;
-    color: #9ca3af; /* 회색 글씨 */
-    font-size: 0.875rem; /* 14px */
+    color: #9ca3af;
+    font-size: 0.875rem;
+    flex-shrink: 0; /* 푸터 고정 */
 }
 
 /* 3. 네비게이션 */
 .nav-links {
     display: flex;
-    gap: 1.5rem; /* 24px */
+    gap: 1.5rem;
 }
 
 .nav-link {
-    color: #4b5563; /* text-gray-600 */
+    color: #4b5563;
     font-weight: 500;
     text-decoration: none;
     transition: color 0.2s;
 }
 .nav-link:hover {
-    color: #003458; /* 인디고 */
+    color: #003458;
 }
 .nav-icon {
-    width: 1.5rem; /* 24px */
+    width: 1.5rem;
     height: 1.5rem;
 }
 
 /* 4. 컨텐츠 (페이지 내용) */
 .content-subtitle {
-    font-size: 1rem; /* 16px */
+    font-size: 1rem;
     font-weight: 500;
-    color: #6b7280; /* text-gray-500 */
+    color: #6b7280;
     margin-bottom: 0.5rem;
 }
 
 .content-title {
-    font-size: 2.25rem; /* 36px */
+    font-size: 2.25rem;
     font-weight: 700;
-    color: #003458; /* 인디고 */
+    color: #003458;
     margin-bottom: 1rem;
 }
 
@@ -85,22 +100,30 @@ body {
     color: #4b5563;
     font-size: 1rem;
     margin-top: 0.5rem;
+    line-height: 1.6; /* 줄 간격 */
 }
+
+.mt-4 {
+    margin-top: 1rem; /* [신규] p 태그 사이 간격 */
+}
+
 
 /* 5. 랜덤 로또 페이지 */
 .result-box {
     padding: 1.5rem;
-    background-color: #f9fafb; /* 매우 연한 회색 */
+    background-color: #f9fafb;
     border-radius: 0.5rem;
     margin: 1.5rem 0;
     min-height: 50px;
     color: #6b7280;
     font-weight: 500;
+    border: 1px solid #e5e7eb; /* 테두리 추가 */
 }
 
 .button-group {
     display: flex;
     gap: 1rem;
+    justify-content: center; /* 버튼 그룹 가운데 정렬 */
 }
 
 .save-form {
@@ -121,6 +144,7 @@ body {
     font-weight: 500;
     color: #374151;
     text-align: left;
+    margin-bottom: 0.25rem;
 }
 
 .input-field {
@@ -128,7 +152,6 @@ body {
     padding: 0.5rem;
     border: 1px solid #d1d5db;
     border-radius: 0.5rem;
-    margin-top: 0.25rem;
     box-sizing: border-box;
 }
 
@@ -143,15 +166,15 @@ body {
 }
 
 .btn-primary {
-    background-color: #003458; /* 인디고 */
+    background-color: #003458;
     color: #ffffff;
 }
 .btn-primary:hover {
-    background-color: #003458;
+    background-color: #002a48;
 }
 
 .btn-secondary {
-    background-color: #e5e7eb; /* 연한 회색 */
+    background-color: #e5e7eb;
     color: #374151;
 }
 .btn-secondary:hover {
