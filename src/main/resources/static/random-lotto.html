@@ -49,5 +49,113 @@
     <p>Copyright &copy; 2025 Im-minji</p>
 </footer>
 
+<!--
+      [JavaScript 코드 추가]
+    -->
+<script>
+    // 1. HTML 문서가 모두 로드되면, function() 안의 코드를 실행
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // 2. HTML에서 필요한 요소들을 ID로 찾아서 변수에 저장
+        const generateBtn = document.getElementById('generate-btn');
+        const saveBtn = document.getElementById('save-btn');
+        const resultArea = document.getElementById('random-result-area');
+        const saveForm = document.getElementById('save-form');
+        const lottoNameInput = document.getElementById('lotto-name');
+        const saveConfirmBtn = document.getElementById('save-confirm-btn');
+
+        // 생성된 로또 번호를 임시로 저장할 변수
+        let currentNumbers = [];
+
+        // 3. 로또 번호 생성하기(generate-btn) 버튼 클릭 이벤트
+        generateBtn.addEventListener('click', async () => {
+            try {
+                // API 1: 랜덤 번호 생성 API 호출 (LottoController의 getRandomLotto() 실행)
+                const response = await fetch('/im-minji/lotto/random');
+
+                if (!response.ok) {
+                    throw new Error('[ERROR] API 호출에 실패했습니다.');
+                }
+
+                // 서버가 돌려준 JSON 데이터를 객체로 변환 data = { "numbers": [1, 2, 3, 4, 5, 6] }
+                const data = await response.json();
+
+                // 전역 변수에 번호 저장 (저장하기 버튼을 위해)
+                currentNumbers = data.numbers;
+
+                // 4. '결과 화면'의 HTML 내용을 API에서 받은 번호로 덮어쓰기
+                resultArea.innerHTML = `<p class="lotto-numbers">${currentNumbers.join(', ')}</p>`;
+
+                // 5. 버튼 상태 변경
+                generateBtn.textContent = '재생성'; // 버튼 텍스트 변경
+                saveBtn.disabled = false; // 저장하기 버튼 활성화
+                saveForm.classList.add('hidden'); // 이름 입력창 숨기기 (초기화)
+
+            } catch (error) {
+                resultArea.innerHTML = `<p class="error-text">${error.message}</p>`;
+            }
+        });
+
+
+        // 6. MyLotto에 저장하기 (save-btn) 버튼 클릭 이벤트
+        saveBtn.addEventListener('click', () => {
+            // 숨겨져 있던 '이름 입력 폼'을 보여줌
+            saveForm.classList.remove('hidden');
+            lottoNameInput.focus(); // 입력창에 바로 타이핑할 수 있게 포커스
+        });
+
+        // 7. 저장 확인 (save-confirm-btn) 버튼 클릭 이벤트
+        saveConfirmBtn.addEventListener('click', async () => {
+            const lottoName = lottoNameInput.value;
+
+            // 유효성 검사
+            if (!lottoName) {
+                alert('로또 이름을 입력해주세요.');
+                return;
+            }
+            if (currentNumbers.length === 0) {
+                alert('먼저 로또를 생성해주세요.');
+                return;
+            }
+
+            // API 2: 나만의 로또 저장 API에 보낼 Request DTO
+            const requestBody = {
+                numbers: currentNumbers,
+                lottoName: lottoName
+            };
+
+            try {
+                // API 2: 나만의 로또 저장 API 호출 (LottoController의 saveMyLotto() 실행)
+                const response = await fetch('/im-minji/my-lotto', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody) // JS 객체를 JSON 문자열로 변환
+                });
+
+                if (!response.ok) {
+                    throw new Error('저장에 실패했습니다.');
+                }
+
+                const savedLotto = await response.json(); // 저장된 Response DTO 받기
+
+                alert(`'${savedLotto.lottoName}' 이름으로 저장되었습니다! (ID: ${savedLotto.id})`);
+
+                // 8. 성공 후, 화면 초기화
+                lottoNameInput.value = '';
+                currentNumbers = [];
+                saveForm.classList.add('hidden');
+                saveBtn.disabled = true;
+                generateBtn.textContent = '로또 번호 생성하기';
+                resultArea.innerHTML = `<p>생성하기 버튼을 눌러주세요.</p>`;
+
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
