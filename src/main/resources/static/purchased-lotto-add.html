@@ -27,16 +27,16 @@
     <h1 class="content-title">구매했던 번호를 저장해보세요!</h1>
 
     <div class="save-form-box">
-        <!-- 나중에 이 폼을 JS가 POST /im-minji/purchase/manual 로 전송 -->
+        <!-- [수정] 폼(form) 태그에 ID 부여 -->
         <form id="purchase-save-form">
             <div class="form-group">
                 <label for="lotto-numbers" class="input-label">번호 입력 (쉼표로 구분해주세요)</label>
-                <input type="text" id="lotto-numbers" class="input-field" placeholder="예: 1, 2, 3, 4, 5, 6">
+                <input type="text" id="lotto-numbers" class="input-field" placeholder="예: 1, 2, 3, 4, 5, 6" required>
             </div>
             <div class="form-group">
                 <label for="purchase-date" class="input-label">구매 날짜</label>
                 <!-- 날짜 선택 입력창 -->
-                <input type="date" id="purchase-date" class="input-field">
+                <input type="date" id="purchase-date" class="input-field" required>
             </div>
             <button type="submit" id="save-btn" class="btn btn-primary">저장하기</button>
         </form>
@@ -47,6 +47,81 @@
 <footer class="site-footer">
     <p>Copyright &copy; 2025 Im-minji</p>
 </footer>
+
+<!--
+  [JavaScript 코드 추가]
+-->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // 1. 폼(form)과 입력창(input) 요소를 찾기
+        const saveForm = document.getElementById('purchase-save-form');
+        const lottoNumbersInput = document.getElementById('lotto-numbers');
+        const purchaseDateInput = document.getElementById('purchase-date');
+
+        // 2. 폼(form)에서 submit 이벤트가 발생했을 때(저장하기 버튼 클릭 시)
+        saveForm.addEventListener('submit', async (event) => {
+            // 3. 'submit'의 기본 동작(페이지 새로고침)을 막기
+            event.preventDefault();
+
+            // 4. 입력된 값을 가져오기
+            const numbersString = lottoNumbersInput.value; // "1, 2, 3"
+            const purchaseDate = purchaseDateInput.value; // "2025-11-17"
+
+            // 5. 유효성 검사
+            let numbersArray = [];
+            try {
+                // 쉼표로 구분된 문자열을 -> 숫자 배열로 변환
+                numbersArray = numbersString.split(',')       // ["1", " 2", " 3", ...]
+                    .map(s => parseInt(s.trim())) // [1, 2, 3, ...]
+                    .filter(n => !isNaN(n)); // NaN(숫자 아님) 값 제거
+
+                // 프론트엔드 유효성 검사
+                if (!purchaseDate) {
+                    throw new Error('구매 날짜를 선택해주세요.');
+                }
+                if (numbersArray.length !== 6) {
+                    throw new Error('로또 번호는 6개여야 합니다.');
+                }
+
+            } catch (error) {
+                alert('입력 값 오류: ' + (error.message || '번호를 쉼표(,)로 구분하여 6개 입력해주세요.'));
+                return;
+            }
+
+            // 6. API에 보낼 Request DTO 객체
+            const requestBody = {
+                numbers: numbersArray,
+                purchaseDate: purchaseDate // 예: "2025-11-17"
+            };
+
+            try {
+                // 7. API: 수동 구매 저장 API 호출 (LottoController의 purchaseManualLotto() 실행)
+                const response = await fetch('/im-minji/purchase/manual', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || '저장에 실패했습니다.');
+                }
+
+                const savedPurchase = await response.json();
+                alert(`구매 내역이 저장되었습니다! (ID: ${savedPurchase.id})`);
+
+                // 8. [핵심] 저장 성공 시, '구매 로또' 목록 페이지로 이동
+                window.location.href = 'purchased-lotto.html';
+
+            } catch (error) {
+                alert('저장 중 오류 발생: ' + error.message);
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
