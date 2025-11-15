@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나만의 로또</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="my-lotto.html" class="nav-link">MyLotto</a>
+            <a href="random-lotto.html" class="nav-link">RandomLotto</a>
+            <a href="purchased-lotto.html" class="nav-link">PurchasedLotto</a>
+        </div>
+        <a href="index.html" class="nav-link">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1V9a1 1 0 011-1h2a1 1 0 011 1v10a1 1 0 001 1m-6 0h6" />
+            </svg>
+        </a>
+    </nav>
+</header>
+
+<!-- 메인 컨텐츠 (나만의 로또 목록) -->
+<main class="main-content">
+    <h1 class="content-title">나만의 로또 리스트</h1>
+    <p class="content-subtitle">기억하고 싶은 번호를 저장하세요!</p>
+
+    <!-- 나중에 JS가 채워넣을 목록 테이블 -->
+    <table id="my-lotto-table" class="lotto-table">
+        <thead>
+        <tr>
+            <th>번호(순서)</th>
+            <th>이름</th>
+            <th>로또 번호</th>
+            <th>구매</th>
+            <th>삭제</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--
+          나중에 JS가 GET /im-minji/my-lotto API를 호출 table을 동적으로 채우게 구현해야 한다.
+          (아래는 임시 목업 데이터)
+        -->
+        <tr>
+            <td>1</td>
+            <td>나의 첫 로또</td>
+            <td>1, 2, 3, 4, 5, 6</td>
+            <td><button class="btn btn-small btn-purchase" data-id="1">구매</button></td>
+            <td><button class="btn btn-small btn-delete" data-id="1">삭제</button></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>행운 번호</td>
+            <td>7, 8, 9, 10, 11, 12</td>
+            <td><button class="btn btn-small btn-purchase" data-id="2">구매</button></td>
+            <td><button class="btn btn-small btn-delete" data-id="2">삭제</button></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="my-lotto-add.html" class="btn btn-primary btn-add-lotto">
+        나만의 로또 번호 추가하기
+    </a>
+</main>
+
+<!-- [공통] 푸터 -->
+<footer class="site-footer">
+    <p>Copyright &copy; 2025 Im-minji</p>
+</footer>
+
+</body>
+</html>
