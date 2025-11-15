@@ -1,113 +1,164 @@
 /* 1. 기본 및 폰트 설정 */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
 
 body {
     font-family: 'Noto Sans KR', sans-serif;
-    background-color: #ffffff;
+    background-color: #ffffff; /* 하얀색 배경 */
     color: #333;
     margin: 0;
     padding: 0;
 }
 
-.wrapper {
+/* 2. 레이아웃 (Figma 디자인) */
+.site-header {
     width: 100%;
-    max-width: 960px;
-    margin: 20px auto;
-    padding: 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb; /* 연한 회색 테두리 */
+}
+
+.navbar {
+    width: 100%;
+    max-width: 1024px; /* 내용물 최대 너비 */
+    margin: 0 auto; /* 내용물 가운데 정렬 */
+    padding: 1rem; /* 16px */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box; /* 패딩이 너비를 늘리지 않도록 */
+}
+
+.main-content {
+    width: 100%;
+    max-width: 1024px;
+    margin: 0 auto; /* 내용물 가운데 정렬 */
+    padding: 3rem 1rem; /* 위아래 여백 48px */
+    text-align: center;
     box-sizing: border-box;
 }
 
-header, main, footer {
+.site-footer {
     width: 100%;
     text-align: center;
+    padding: 2rem 1rem;
+    margin-top: 2rem;
+    border-top: 1px solid #e5e7eb;
+    color: #9ca3af; /* 회색 글씨 */
+    font-size: 0.875rem; /* 14px */
 }
 
-
-.navbar {
-    border-bottom: 2px solid #eee;
-    padding-bottom: 15px;
-    margin-bottom: 20px;
+/* 3. 네비게이션 */
+.nav-links {
+    display: flex;
+    gap: 1.5rem; /* 24px */
 }
 
-.navbar a {
+.nav-link {
+    color: #4b5563; /* text-gray-600 */
+    font-weight: 500;
     text-decoration: none;
-    color: #003458;
+    transition: color 0.2s;
+}
+.nav-link:hover {
+    color: #003458; /* 인디고 */
+}
+.nav-icon {
+    width: 1.5rem; /* 24px */
+    height: 1.5rem;
+}
+
+/* 4. 컨텐츠 (페이지 내용) */
+.content-subtitle {
+    font-size: 1rem; /* 16px */
+    font-weight: 500;
+    color: #6b7280; /* text-gray-500 */
+    margin-bottom: 0.5rem;
+}
+
+.content-title {
+    font-size: 2.25rem; /* 36px */
     font-weight: 700;
-    margin: 0 15px;
+    color: #003458; /* 인디고 */
+    margin-bottom: 1rem;
 }
 
-.navbar a.nav-home {
-    float: right;
+.content-description {
+    color: #4b5563;
+    font-size: 1rem;
+    margin-top: 0.5rem;
 }
 
-.content-box {
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.content-box h1 {
-    color: #003458;
-}
-
+/* 5. 랜덤 로또 페이지 */
 .result-box {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin: 20px 0;
+    padding: 1.5rem;
+    background-color: #f9fafb; /* 매우 연한 회색 */
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
     min-height: 50px;
+    color: #6b7280;
+    font-weight: 500;
 }
 
 .button-group {
     display: flex;
-    justify-content: center;
-    gap: 10px;
+    gap: 1rem;
 }
 
 .save-form {
-    margin-top: 20px;
-    border-top: 1px solid #eee;
-    padding-top: 20px;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    width: 100%;
+    max-width: 400px;
 }
 
 .hidden {
     display: none;
 }
 
-/* 5. 공통 컴포넌트 (버튼, 입력창) */
+.input-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    text-align: left;
+}
+
 .input-field {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin: 5px;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    margin-top: 0.25rem;
+    box-sizing: border-box;
 }
 
+/* 6. 공통 버튼 */
 .btn {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
     font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.btn:hover {
-    background-color: #e0e0e0;
+.btn-primary {
+    background-color: #003458; /* 인디고 */
+    color: #ffffff;
+}
+.btn-primary:hover {
+    background-color: #003458;
 }
 
-.btn:disabled {
-    background-color: #f9f9f9;
-    color: #aaa;
+.btn-secondary {
+    background-color: #e5e7eb; /* 연한 회색 */
+    color: #374151;
+}
+.btn-secondary:hover {
+    background-color: #d1d5db;
+}
+.btn-secondary:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
     cursor: not-allowed;
-}
-
-/* 6. 푸터 */
-footer {
-    margin-top: 30px;
-    padding-top: 15px;
-    border-top: 2px solid #eee;
-    font-size: 0.9em;
-    color: #777;
 }
