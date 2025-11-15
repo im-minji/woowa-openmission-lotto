@@ -28,35 +28,20 @@
     <h1 class="content-title">나만의 로또 리스트</h1>
     <p class="content-subtitle">기억하고 싶은 번호를 저장하세요!</p>
 
-    <!-- 나중에 JS가 채워넣을 목록 테이블 -->
     <table id="my-lotto-table" class="lotto-table">
         <thead>
         <tr>
-            <th>번호(순서)</th>
+            <th>번호(ID)</th>
             <th>이름</th>
             <th>로또 번호</th>
             <th>구매</th>
             <th>삭제</th>
         </tr>
         </thead>
-        <tbody>
-        <!--
-          나중에 JS가 GET /im-minji/my-lotto API를 호출 table을 동적으로 채우게 구현해야 한다.
-          (아래는 임시 목업 데이터)
-        -->
+        <!-- 목업 데이터를 삭제 -->
+        <tbody id="my-lotto-list-body">
         <tr>
-            <td>1</td>
-            <td>나의 첫 로또</td>
-            <td>1, 2, 3, 4, 5, 6</td>
-            <td><button class="btn btn-small btn-purchase" data-id="1">구매</button></td>
-            <td><button class="btn btn-small btn-delete" data-id="1">삭제</button></td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>행운 번호</td>
-            <td>7, 8, 9, 10, 11, 12</td>
-            <td><button class="btn btn-small btn-purchase" data-id="2">구매</button></td>
-            <td><button class="btn btn-small btn-delete" data-id="2">삭제</button></td>
+            <td colspan="5">데이터를 불러오는 중입니다...</td>
         </tr>
         </tbody>
     </table>
