@@ -1,0 +1,254 @@
+/* 기본 및 폰트 설정 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #ffffff;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* 레이아웃 */
+.site-header {
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
+}
+
+.navbar {
+    width: 100%;
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.main-content {
+    width: 100%;
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 3rem 1rem;
+    text-align: center;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+.main-content-centered {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.site-footer {
+    width: 100%;
+    text-align: center;
+    padding: 2rem 1rem;
+    border-top: 1px solid #e5e7eb;
+    color: #9ca3af;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+}
+
+/* 네비게이션 */
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    color: #4b5563;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.nav-link:hover {
+    color: #003458;
+}
+.nav-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* 컨텐츠 (페이지 내용) */
+.content-subtitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+
+.content-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #003458;
+    margin-bottom: 1rem;
+}
+
+.content-description {
+    color: #4b5563;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    line-height: 1.6;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+/* 랜덤 로또 페이지 */
+.result-box {
+    padding: 1.5rem;
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+    min-height: 50px;
+    color: #6b7280;
+    font-weight: 500;
+    border: 1px solid #e5e7eb;
+}
+
+.button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.save-form {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    width: 100%;
+    max-width: 400px;
+}
+
+.hidden {
+    display: none;
+}
+
+.input-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    text-align: left;
+    margin-bottom: 0.25rem;
+}
+
+.input-field {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    box-sizing: border-box; /* 중요 */
+}
+
+
+.btn {
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: #003458;
+    color: #ffffff;
+}
+.btn-primary:hover {
+    background-color: #002a48;
+}
+
+.btn-secondary {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+.btn-secondary:hover {
+    background-color: #d1d5db;
+}
+.btn-secondary:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* 목록 페이지 (my-lotto.html, purchased-lotto.html) */
+.lotto-table {
+    width: 100%;
+    margin: 2rem 0;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.lotto-table th,
+.lotto-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.lotto-table th {
+    background-color: #f9fafb;
+    font-weight: 700;
+    color: #374151;
+}
+
+.lotto-table td {
+    color: #4b5563;
+}
+
+.btn-add-lotto {
+    margin-top: 1rem;
+}
+
+.btn-small {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.btn-purchase {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+.btn-purchase:hover {
+    background-color: #bfdbfe;
+}
+
+.btn-delete {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+.btn-delete:hover {
+    background-color: #fecaca;
+}
+
+
+/* 입력 페이지 (my-lotto-add.html, purchased-lotto-add.html) */
+.save-form-box {
+    width: 100%;
+    max-width: 500px; /* 폼 너비 */
+    margin: 0 auto; /* 폼 가운데 정렬 */
+    padding: 2rem;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    text-align: left; /* 폼 내부는 왼쪽 정렬 */
+}
+
+.form-group {
+    margin-bottom: 1.5rem; /* 폼 그룹간 여백 */
+}
