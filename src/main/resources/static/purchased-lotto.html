@@ -16,6 +16,7 @@
             <a href="purchased-lotto.html" class="nav-link">PurchasedLotto</a>
         </div>
         <a href="index.html" class="nav-link">
+            <!-- 홈 아이콘 SVG -->
             <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1V9a1 1 0 011-1h2a1 1 0 011 1v10a1 1 0 001 1m-6 0h6" />
             </svg>
@@ -30,27 +31,16 @@
     <table id="purchased-lotto-table" class="lotto-table">
         <thead>
         <tr>
-            <th>번호(순서)</th>
+            <th>번호(ID)</th>
             <th>구매 일시</th>
             <th>로또 번호</th>
             <th>삭제</th>
         </tr>
         </thead>
-        <tbody>
-        <!--
-          (아래는 임시 목업 데이터)
-        -->
+        <!-- 하드코딩된 목업 데이터를 삭제  -->
+        <tbody id="purchased-lotto-list-body">
         <tr>
-            <td>1</td>
-            <td>2025-11-13</td>
-            <td>10, 11, 12, 13, 14, 15</td>
-            <td><button class="btn btn-small btn-delete" data-id="1">삭제</button></td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>2025-11-12</td>
-            <td>1, 2, 3, 4, 5, 6</td>
-            <td><button class="btn btn-small btn-delete" data-id="2">삭제</button></td>
+            <td colspan="4">데이터를 불러오는 중입니다...</td>
         </tr>
         </tbody>
     </table>
@@ -64,6 +54,94 @@
 <footer class="site-footer">
     <p>Copyright &copy; 2025 Im-minji</p>
 </footer>
+
+<!--
+  [JavaScript 코드 추가]
+-->
+<script>
+    // 1. HTML 문서가 모두 로드되면, function() 안의 코드를 실행
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // 2. <tbody> 요소를 찾기
+        const tableBody = document.getElementById('purchased-lotto-list-body');
+
+
+        // API 1: 구매 로또 목록 전체를 조회하고 화면에 그리는 함수
+
+        async function loadPurchasedLottoList() {
+            try {
+                // (LottoController의 readAllPurchasedLotto() 실행)
+                const response = await fetch('/im-minji/purchase');
+                if (!response.ok) {
+                    throw new Error('목록을 불러오는데 실패했습니다.');
+                }
+
+                // data = [ { "id": 1, "purchaseDate": "...", "numbers": [...] }, ... ]
+                const lottoList = await response.json();
+
+                // <tbody>의 HTML 내용을 비웁니다.
+                tableBody.innerHTML = '';
+
+                if (lottoList.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="4">저장된 로또가 없습니다.</td></tr>';
+                    return;
+                }
+
+                // 3. 받아온 데이터(lottoList)로 테이블 행(<tr>)을 만들기 (서비스에서 이미 날짜순으로 정렬해서 보내줍니다)
+                lottoList.forEach(lotto => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${lotto.id}</td>
+                        <td>${lotto.purchaseDate}</td>
+                        <td>${lotto.numbers.join(', ')}</td>
+                        <td>
+                            <button class="btn btn-small btn-delete" data-id="${lotto.id}">삭제</button>
+                        </td>
+                    `;
+                    // 4. 완성된 행(row)을 <tbody>에 추가
+                    tableBody.appendChild(row);
+                });
+
+            } catch (error) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="error-text">${error.message}</td></tr>`;
+            }
+        }
+
+        /**
+         * API 2: '삭제' 버튼 클릭 처리 (D)
+         */
+        tableBody.addEventListener('click', async (event) => {
+            const clickedButton = event.target;
+            const lottoId = clickedButton.dataset.id; // data-id 속성 값
+
+            // '삭제' 버튼을 클릭했고, ID가 있을 때만 실행
+            if (lottoId && clickedButton.classList.contains('btn-delete')) {
+                if (!confirm(`'${lottoId}'번 구매 내역을 정말 삭제하시겠습니까?`)) {
+                    return;
+                }
+                try {
+                    // (LottoController의 deletePurchasedLotto() 실행)
+                    const response = await fetch(`/im-minji/purchase/${lottoId}`, {
+                        method: 'DELETE'
+                    });
+                    if (!response.ok) {
+                        throw new Error('삭제에 실패했습니다.');
+                    }
+                    alert('삭제 완료!');
+
+                    // 5. 삭제 성공 시, 목록을 새로고침
+                    loadPurchasedLottoList();
+
+                } catch (error) {
+                    alert(error.message);
+                }
+            }
+        });
+
+        // 6. 페이지가 열때 구매 로또 목록을 불러오기
+        loadPurchasedLottoList();
+    });
+</script>
 
 </body>
 </html>

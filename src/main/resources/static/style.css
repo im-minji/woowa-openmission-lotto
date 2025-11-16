@@ -252,3 +252,14 @@ body {
 .form-group {
     margin-bottom: 1.5rem; /* 폼 그룹간 여백 */
 }
+
+.lotto-numbers {
+    font-size: 1.5rem; /* 24px */
+    font-weight: 700;
+    color: #003458; /* 포인트 색상 */
+}
+
+.error-text {
+    color: #b91c1c; /* 빨간색 (에러) */
+    font-weight: 500;
+}

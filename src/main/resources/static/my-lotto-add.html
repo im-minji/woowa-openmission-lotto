@@ -48,5 +48,80 @@
     <p>Copyright &copy; 2025 Im-minji</p>
 </footer>
 
+<!--
+  [JavaScript 코드 추가]
+-->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // 1. 폼(form)과 입력창(input) 요소를 찾기
+        const saveForm = document.getElementById('my-lotto-save-form');
+        const lottoNameInput = document.getElementById('lotto-name');
+        const lottoNumbersInput = document.getElementById('lotto-numbers');
+
+        // 2. 폼(form)에서 submit 이벤트가 발생했을 때(저장하기 버튼 클릭 시)
+        saveForm.addEventListener('submit', async (event) => {
+            // 3. 'submit'의 기본 동작(페이지 새로고침)을 막기
+            event.preventDefault();
+
+            // 4. 입력된 값을 가져오기
+            const lottoName = lottoNameInput.value;
+            const numbersString = lottoNumbersInput.value; // "1, 2, 3, 4, 5, 6"
+
+            // 5. 쉼표로 구분된 문자열을 -> 숫자 배열로 변환
+            let numbersArray = [];
+            try {
+                numbersArray = numbersString.split(',')       // ["1", " 2", " 3", ...]
+                    .map(s => parseInt(s.trim())) // [1, 2, 3, ...]
+                    .filter(n => !isNaN(n)); // NaN(숫자 아님) 값 제거
+
+                // 간단한 유효성 검사
+                if (numbersArray.length !== 6) {
+                    throw new Error('로또 번호는 6개여야 합니다.');
+                }
+                if (!lottoName) {
+                    throw new Error('로또 이름을 입력해야 합니다.');
+                }
+
+            } catch (error) {
+                alert('입력 값 오류: ' + (error.message || '번호를 쉼표(,)로 구분하여 6개 입력해주세요.'));
+                return;
+            }
+
+            // 6. API에 보낼 Request DTO 객체
+            const requestBody = {
+                numbers: numbersArray,
+                lottoName: lottoName
+            };
+
+            try {
+                // 7. API 2: '나만의 로또' 저장 API 호출 (LottoController의 saveMyLotto() 실행)
+                const response = await fetch('/im-minji/my-lotto', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    // 서버가 4xx, 5xx 에러를 보낸 경우
+                    const errorData = await response.json(); // 서버의 에러 메시지
+                    throw new Error(errorData.message || '저장에 실패했습니다.');
+                }
+
+                const savedLotto = await response.json();
+                alert(`'${savedLotto.lottoName}' 이름으로 저장되었습니다! (ID: ${savedLotto.id})`);
+
+                // 8. 저장 성공 시, '나만의 로또' 목록 페이지로 이동
+                window.location.href = 'my-lotto.html';
+
+            } catch (error) {
+                alert('저장 중 오류 발생: ' + error.message);
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
