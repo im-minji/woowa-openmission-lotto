@@ -1,13 +1,17 @@
 # 우아한 테크코스 오픈 미션 
-
+&nbsp;
 ### 1. 프로젝트 설명
 
 본 프로젝트는 우아한테크코스 4주차 오픈미션입니다. 
-3주차에 Java 콘솔 애플리케이션으로 구현했던 '로또 미션'을 'Spring Boot 웹 API'로 확장하고, 
-사용자가 실제 로또 번호를 기록하고 관리할 수 있는 웹 페이지를 구현하는 것을 목표로 합니다.
+
+
+3주차에 Java 콘솔 애플리케이션으로 구현했던 '로또 미션'을 'Spring Boot 웹 API'로 확장하고, 사용자가 실제 로또 번호를 기록하고 관리할 수 있는 웹 페이지를 구현하는 것을 목표로 합니다.
+
 
 백엔드는 Spring Boot를 사용하여 RESTful API를 구축하고, 프론트엔드는 순수 HTML, CSS, JavaScript(Fetch API)를 사용하여 백엔드와 통신합니다.
 
+&nbsp;
+---
 &nbsp;
 
 ### 2. 사용 기술 및 선정 이유
@@ -39,6 +43,8 @@ JUnit 5 & Mockito: LottoService 비즈니스 로직이 의존성(Repository)과 
 Postman / Web Browser: 구현된 API 엔드포인트(LottoController)가 LottoApplication 실행 시 실제 HTTP 요청에 대해 의도대로 작동하는지 통합 테스트하기 위해 사용했습니다.
 
 &nbsp;
+---
+&nbsp;
 
 ### 3. 실행 및 테스트 방법
 
@@ -57,6 +63,9 @@ Postman / Web Browser: 구현된 API 엔드포인트(LottoController)가 LottoAp
 (선택) Postman과 같은 API 테스트 도구를 사용하여 http://localhost:8080/im-minji/ 경로의 API 엔드포인트를 직접 테스트할 수 있습니다.
 
 &nbsp;
+---
+&nbsp;
+
 ### 4. 페이지별 기능 설명
 
 모든 페이지는 src/main/resources/static 경로에 HTML 파일로 존재하며, JavaScript fetch를 통해 백엔드 API와 통신합니다.
@@ -89,6 +98,8 @@ Postman / Web Browser: 구현된 API 엔드포인트(LottoController)가 LottoAp
 #### 6. purchased-lotto-add.html (구매 로또 입력)
 - 로또 번호와 구매 날짜를 수동으로 입력해 purchasedLotto 목록에 추가할 수 있습니다.
 
+&nbsp;
+---
 &nbsp;
 
 ### 5. 구현한 기능 목록 (API 기준)
