@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WinningLottoRepository extends JpaRepository<WinningLotto, Long> {
-    Optional<WinningLotto> findByDrawDate(LocalDate drawDate);
+    Optional<WinningLotto> findByDrawDateBetween(LocalDate start, LocalDate end);
 }
