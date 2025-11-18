@@ -14,10 +14,17 @@ import com.woowa.lotto.dto.request.MyLottoRequestDTO;
 import com.woowa.lotto.dto.response.MyLottoResponseDTO;
 import com.woowa.lotto.dto.response.PurchasedLottoResponseDTO;
 import com.woowa.lotto.dto.request.PurchasedLottoRequestDTO;
+import com.woowa.lotto.dto.response.StatisticsResponseDTO;
+import com.woowa.lotto.dto.request.WinningLottoCreateRequestDTO;
 
 import com.woowa.lotto.repository.*;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
+
+import java.time.temporal.TemporalAdjusters;
+import java.time.DayOfWeek;
+import java.util.EnumMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Transactional
@@ -120,12 +127,9 @@ public class LottoService {
         purchasedLottoRepository.deleteById(purchasedLottoId);
     }
 
-    /**
-     * [Internal] 로또 구매 공통 로직
-     * [수정] 'purchaseDate'를 파라미터로 받도록 변경
-     */
+
     private PurchasedLottoResponseDTO purchaseLottoInternal(Lotto lotto, LocalDate purchaseDate) {
-        // [수정] DTO에서 받은 날짜가 null이 아닌지 확인
+        // DTO에서 받은 날짜가 null이 아닌지 확인
         Objects.requireNonNull(purchaseDate, "[ERROR] 구매 날짜는 null일 수 없습니다.");
 
         // DTO에서 받은 날짜를 사용
@@ -135,4 +139,77 @@ public class LottoService {
     }
 
     // TODO: 4. 당첨 결과 및 통계 (Statistics) 기능 구현
+
+    // 당첨 번호 및 보너스 번호 등록
+    public void createWinningLotto(WinningLottoCreateRequestDTO request) {
+        // Lotto 객체 생성 (유효성 검증 자동 수행)
+        Lotto lotto = new Lotto(request.getNumbers());
+
+        // WinningLotto 엔티티 생성 (보너스 번호 검증 수행)
+        WinningLotto winningLotto = new WinningLotto(
+                lotto,
+                request.getBonusNum(),
+                request.getDrawDate()
+        );
+
+        winningLottoRepository.save(winningLotto);
+    }
+
+    // 입력받은 날짜가 포함된 '주(Week)'의 구매 내역과 당첨 결과를 비교하여 통계를 반환
+    @Transactional(readOnly = true)
+    public StatisticsResponseDTO getStatistics(LocalDate queryDate) {
+        // 주간 범위 계산 (월요일 ~ 일요일)
+        LocalDate startOfWeek = queryDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate endOfWeek = queryDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+
+        // 2. 해당 주차의 '당첨 번호' 조회
+        WinningLotto winningLotto = winningLottoRepository.findByDrawDateBetween(startOfWeek, endOfWeek)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        String.format("[ERROR] 해당 주차(%s ~ %s)의 당첨 번호가 입력되지 않았습니다.", startOfWeek, endOfWeek)));
+
+        // 해당 주차에 '구매한 로또' 목록 조회
+        List<PurchasedLotto> purchasedLottos = purchasedLottoRepository.findAllByPurchaseDateBetween(startOfWeek, endOfWeek);
+
+        // 통계 계산 (Lotto 도메인 메서드 활용)
+        Map<LottoRank, Integer> statisticsMap = calculateRankStatistics(purchasedLottos, winningLotto);
+        LottoResult lottoResult = new LottoResult(statisticsMap);
+
+        // 수익률 계산
+        int purchaseAmount = purchasedLottos.size() * 1000;
+        double rateOfReturn = lottoResult.getRateOfReturn(purchaseAmount);
+
+        // DTO 반환
+        return StatisticsResponseDTO.builder()
+                .drawDate(winningLotto.getDrawDate())
+                .winningNumbers(winningLotto.getWinningLotto().getNumbers())
+                .bonusNum(winningLotto.getBonusNum())
+                .rankCounts(lottoResult.getStatistics())
+                .rateOfReturn(rateOfReturn)
+                .build();
+    }
+
+
+    private Map<LottoRank, Integer> calculateRankStatistics(List<PurchasedLotto> tickets, WinningLotto winningLotto) {
+        // 빈 통계 맵 초기화
+        Map<LottoRank, Integer> stats = new EnumMap<>(LottoRank.class);
+        for (LottoRank rank : LottoRank.values()) {
+            stats.put(rank, 0);
+        }
+
+        // 당첨 번호 로또 객체 가져오기
+        Lotto winningNumbers = winningLotto.getWinningLotto();
+        int bonusNumber = winningLotto.getBonusNum();
+
+        for (PurchasedLotto ticket : tickets) {
+            Lotto userLotto = ticket.getPurchasedLotto(); // 사용자 로또
+
+            int matchCount = userLotto.matchCount(winningNumbers);
+            boolean hasBonus = userLotto.hasBonusNum(bonusNumber);
+
+            LottoRank rank = LottoRank.find(matchCount, hasBonus);
+            stats.put(rank, stats.get(rank) + 1);
+        }
+
+        return stats;
+    }
 }

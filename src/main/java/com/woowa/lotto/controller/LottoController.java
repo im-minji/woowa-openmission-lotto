@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.woowa.lotto.dto.request.WinningLottoCreateRequestDTO;
+import com.woowa.lotto.dto.response.StatisticsResponseDTO;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
+import java.time.LocalDate;
+
 @RestController
 
 @RequestMapping("/im-minji")
@@ -65,6 +71,21 @@ public class LottoController {
     @DeleteMapping("/purchase/{purchaseId}")
     public void deletePurchasedLotto(@PathVariable Long purchaseId) {
         lottoService.deletePurchasedLotto(purchaseId);
+    }
+
+    // --- 4. Statistics & Winning Lotto (새로 추가된 기능) ---
+
+    // 당첨 번호 입력 (POST /im-minji/winning-lotto)
+    @PostMapping("/winning-lotto")
+    public ResponseEntity<Void> createWinningLotto(@RequestBody WinningLottoCreateRequestDTO request) {
+        lottoService.createWinningLotto(request);
+        return ResponseEntity.ok().build();
+    }
+
+    // 당첨 통계 조회 (GET /im-minji/statistics?date=2025-11-18)
+    @GetMapping("/statistics")
+    public ResponseEntity<StatisticsResponseDTO> getStatistics(@RequestParam("date") LocalDate date) {
+        return ResponseEntity.ok(lottoService.getStatistics(date));
     }
 
 }
