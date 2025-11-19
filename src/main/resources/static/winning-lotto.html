@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로또 웹 프로젝트 - 당첨 결과</title>
+    <title>당첨 회차 목록</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -25,107 +25,26 @@
 </header>
 
 <main class="main-content">
-    <h1 class="content-title">당첨 결과 및 통계</h1>
-    <p class="content-subtitle">이번 주 당첨 번호를 입력하고 나의 결과를 확인해보세요.</p>
+    <h1 class="content-title">당첨 회차 목록</h1>
+    <p class="content-subtitle">등록된 당첨 번호 목록입니다. '결과 확인'을 눌러 상세 통계를 확인하세요.</p>
 
-    <section>
-        <h2 class="section-title">Step 1. 당첨 번호 등록</h2>
+    <div style="text-align: right; margin-bottom: 1rem;">
+        <a href="winning-lotto-add.html" class="btn btn-primary">새 당첨 번호 등록</a>
+    </div>
 
-        <div class="save-form-box" style="text-align: center; max-width: 600px;">
-            <div class="input-group">
-                <label class="input-label" style="text-align: center;">당첨 번호 6개</label>
-                <div class="lotto-inputs">
-                    <input type="number" class="lotto-input win-num" min="1" max="45">
-                    <input type="number" class="lotto-input win-num" min="1" max="45">
-                    <input type="number" class="lotto-input win-num" min="1" max="45">
-                    <input type="number" class="lotto-input win-num" min="1" max="45">
-                    <input type="number" class="lotto-input win-num" min="1" max="45">
-                    <input type="number" class="lotto-input win-num" min="1" max="45">
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label class="input-label" style="text-align: center; color: #b91c1c;">보너스 번호</label>
-                <div class="lotto-inputs">
-                    <input type="number" id="bonus-num" class="lotto-input bonus" min="1" max="45">
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label class="input-label" style="text-align: center;">추첨일 (기준 날짜: 토요일)</label>
-                <input type="date" id="draw-date" class="input-field date-input">
-            </div>
-
-            <button id="btn-register" class="btn btn-primary">당첨 번호 등록하기</button>
-        </div>
-    </section>
-
-    <section>
-        <h2 class="section-title">Step 2. 당첨 결과 확인</h2>
-
-        <div style="margin-bottom: 2rem;">
-            <p class="content-description">확인하고 싶은 날짜를 선택하면, 해당 주차의 결과를 보여줍니다.</p>
-            <div style="display: flex; justify-content: center; gap: 10px; margin-top: 1rem;">
-                <input type="date" id="check-date" class="input-field date-input">
-                <button id="btn-check" class="btn btn-secondary">결과 확인</button>
-            </div>
-        </div>
-
-        <div id="result-area" class="hidden">
-            <div class="result-box" style="text-align: center;">
-                <span id="result-week-info" style="font-weight: bold; color: #003458;"></span>
-            </div>
-
-            <table class="stat-table">
-                <thead>
-                <tr>
-                    <th>등수</th>
-                    <th>일치 조건</th>
-                    <th>상금</th>
-                    <th>당첨 개수</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>5등</td>
-                    <td>3개 일치</td>
-                    <td>5,000원</td>
-                    <td id="count-FIFTH" style="font-weight: bold;">0개</td>
-                </tr>
-                <tr>
-                    <td>4등</td>
-                    <td>4개 일치</td>
-                    <td>50,000원</td>
-                    <td id="count-FOURTH" style="font-weight: bold;">0개</td>
-                </tr>
-                <tr>
-                    <td>3등</td>
-                    <td>5개 일치</td>
-                    <td>1,500,000원</td>
-                    <td id="count-THIRD" style="font-weight: bold;">0개</td>
-                </tr>
-                <tr>
-                    <td>2등</td>
-                    <td>5개 + 보너스</td>
-                    <td>30,000,000원</td>
-                    <td id="count-SECOND" style="font-weight: bold;">0개</td>
-                </tr>
-                <tr>
-                    <td>1등</td>
-                    <td>6개 일치</td>
-                    <td>2,000,000,000원</td>
-                    <td id="count-FIRST" style="font-weight: bold; color: #b91c1c;">0개</td>
-                </tr>
-                </tbody>
-            </table>
-
-            <div class="result-summary">
-                <p class="content-subtitle">총 수익률 (ROI)</p>
-                <span id="roi" class="roi-text">0.0%</span>
-            </div>
-        </div>
-    </section>
-
+    <table class="lotto-table">
+        <thead>
+        <tr>
+            <th>추첨일 (기준일)</th>
+            <th>당첨 번호</th>
+            <th>보너스</th>
+            <th>상세보기</th>
+        </tr>
+        </thead>
+        <tbody id="winning-list-body">
+        <tr><td colspan="4">데이터를 불러오는 중...</td></tr>
+        </tbody>
+    </table>
 </main>
 
 <footer class="site-footer">
@@ -133,147 +52,42 @@
 </footer>
 
 <script>
-    // 1. 스크립트가 로드되었는지 확인
-    console.log("스크립트가 로드되었습니다.");
+    document.addEventListener('DOMContentLoaded', async () => {
+        const tableBody = document.getElementById('winning-list-body');
 
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log("DOM(HTML)이 준비되었습니다.");
+        try {
+            // [API 호출] 목록 조회
+            const response = await fetch('/im-minji/winning-lotto');
+            if (!response.ok) throw new Error('목록을 불러오는데 실패했습니다.');
 
-        // 날짜 초기화
-        const today = new Date().toISOString().split('T')[0];
-        const drawDateElem = document.getElementById('draw-date');
-        const checkDateElem = document.getElementById('check-date');
+            const list = await response.json();
+            tableBody.innerHTML = ''; // 로딩 문구 제거
 
-        if(drawDateElem && checkDateElem) {
-            drawDateElem.value = today;
-            checkDateElem.value = today;
-        } else {
-            console.error("날짜 입력창(ID: draw-date 또는 check-date)을 찾을 수 없습니다. HTML ID를 확인하세요.");
-        }
+            if (list.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4">등록된 당첨 번호가 없습니다.</td></tr>';
+                return;
+            }
 
-        // -------------------------------------------------------
-        // 버튼 요소 찾기 (여기서 null이 나오면 HTML ID 오타임)
-        // -------------------------------------------------------
-        const btnRegister = document.getElementById('btn-register');
-        const btnCheck = document.getElementById('btn-check');
-
-        console.log("버튼 확인:", { btnRegister, btnCheck });
-
-        // -------------------------------------------------------
-        // 기능 1: 당첨 번호 등록
-        // -------------------------------------------------------
-        if (btnRegister) {
-            btnRegister.addEventListener('click', async () => {
-                console.log("🖱️ [등록하기] 버튼이 클릭되었습니다.");
-
-                const winNumInputs = document.querySelectorAll('.win-num');
-                const bonusInput = document.getElementById('bonus-num');
-                const dateInput = document.getElementById('draw-date');
-
-                // 값 수집
-                const numbers = Array.from(winNumInputs).map(input => {
-                    const val = parseInt(input.value);
-                    return isNaN(val) ? null : val;
-                });
-                const bonusNum = parseInt(bonusInput.value);
-                const drawDate = dateInput.value;
-
-                console.log("입력된 값:", { numbers, bonusNum, drawDate });
-
-                // 검증
-                if (numbers.includes(null) || isNaN(bonusNum) || !drawDate) {
-                    alert('모든 번호와 날짜를 정확히 입력해주세요.');
-                    console.warn("입력값 누락 발생");
-                    return;
-                }
-
-                try {
-                    console.log("서버로 POST 요청을 보냅니다...");
-                    const response = await fetch('/im-minji/winning-lotto', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ numbers, bonusNum, drawDate })
-                    });
-
-                    console.log("서버 응답 상태:", response.status);
-
-                    if (!response.ok) {
-                        throw new Error(`등록 실패! 상태 코드: ${response.status}`);
-                    }
-
-                    alert('당첨 번호가 등록되었습니다!');
-                    console.log("등록 성공");
-
-                } catch (error) {
-                    console.error("에러 발생:", error);
-                    alert('에러 발생: ' + error.message);
-                }
+            // 리스트 렌더링
+            list.forEach(item => {
+                const tr = document.createElement('tr');
+                // item: { id, drawDate, numbers: [], bonusNum }
+                tr.innerHTML = `
+                    <td>${item.drawDate}</td>
+                    <td style="letter-spacing: 2px; font-weight: bold; color: #003458;">
+                        ${item.numbers.join(', ')}
+                    </td>
+                    <td style="color: #d9534f; font-weight: bold;">${item.bonusNum}</td>
+                    <td>
+                        <a href="winning-lotto-result.html?date=${item.drawDate}" class="btn btn-small btn-secondary">결과 확인</a>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
             });
-        } else {
-            console.error("'btn-register' 버튼을 찾을 수 없습니다.");
-        }
-
-        // -------------------------------------------------------
-        // 기능 2: 통계 조회
-        // -------------------------------------------------------
-        if (btnCheck) {
-            btnCheck.addEventListener('click', async () => {
-                console.log("🖱️ [결과 확인] 버튼이 클릭되었습니다.");
-
-                const dateInput = document.getElementById('check-date').value;
-                if (!dateInput) {
-                    alert('날짜를 선택해주세요.');
-                    return;
-                }
-
-                try {
-                    console.log(`서버로 GET 요청을 보냅니다... 날짜: ${dateInput}`);
-                    const response = await fetch(`/im-minji/statistics?date=${dateInput}`);
-
-                    console.log("서버 응답 상태:", response.status);
-
-                    if (!response.ok) {
-                        const errorText = await response.text(); // 서버 에러 메시지 확인
-                        console.error("서버 에러 메시지:", errorText);
-                        throw new Error('통계를 불러오지 못했습니다. (해당 주차에 당첨 번호가 없을 수 있습니다)');
-                    }
-
-                    const data = await response.json();
-                    console.log("받은 데이터:", data);
-                    renderStatistics(data);
-
-                } catch (error) {
-                    console.error("에러 발생:", error);
-                    alert(error.message);
-                }
-            });
-        } else {
-            console.error("'btn-check' 버튼을 찾을 수 없습니다.");
-        }
-
-        // 화면 그리기 함수
-        function renderStatistics(data) {
-            const resultArea = document.getElementById('result-area');
-            if(resultArea) resultArea.classList.remove('hidden');
-
-            // 데이터 바인딩 안전하게 처리
-            setText('result-week-info', `기준 추첨일: ${data.drawDate} | 보너스: ${data.bonusNum}`);
-            setText('count-FIFTH', (data.rankCounts.FIFTH || 0) + '개');
-            setText('count-FOURTH', (data.rankCounts.FOURTH || 0) + '개');
-            setText('count-THIRD', (data.rankCounts.THIRD || 0) + '개');
-            setText('count-SECOND', (data.rankCounts.SECOND || 0) + '개');
-            setText('count-FIRST', (data.rankCounts.FIRST || 0) + '개');
-            setText('roi', data.rateOfReturn.toFixed(1) + '%');
-        }
-
-        // 헬퍼 함수: ID가 없어도 에러 안 나게 처리
-        function setText(id, text) {
-            const el = document.getElementById(id);
-            if(el) el.innerText = text;
-            else console.warn(`ID가 '${id}'인 요소를 찾을 수 없어 텍스트를 넣지 못했습니다.`);
+        } catch (error) {
+            tableBody.innerHTML = `<tr><td colspan="4" class="error-text">${error.message}</td></tr>`;
         }
     });
 </script>
-
 </body>
 </html>

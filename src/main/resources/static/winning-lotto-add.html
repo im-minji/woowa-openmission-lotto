@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>당첨 번호 등록</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="my-lotto.html" class="nav-link">MyLotto</a>
+            <a href="random-lotto.html" class="nav-link">RandomLotto</a>
+            <a href="purchased-lotto.html" class="nav-link">PurchasedLotto</a>
+            <a href="winning-lotto.html" class="nav-link active">WinningResult</a>
+        </div>
+        <a href="index.html" class="nav-link">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1V9a1 1 0 011-1h2a1 1 0 011 1v10a1 1 0 001 1m-6 0h6" />
+            </svg>
+        </a>
+    </nav>
+</header>
+
+<main class="main-content">
+    <h1 class="content-title">당첨 번호 등록</h1>
+    <p class="content-subtitle">이번 주 당첨 번호를 등록해주세요.</p>
+
+    <div class="save-form-box" style="text-align: center; max-width: 600px; margin-top: 2rem;">
+        <div class="input-group">
+            <label class="input-label" style="text-align: center;">당첨 번호 6개</label>
+            <div class="lotto-inputs">
+                <input type="number" class="lotto-input win-num" min="1" max="45">
+                <input type="number" class="lotto-input win-num" min="1" max="45">
+                <input type="number" class="lotto-input win-num" min="1" max="45">
+                <input type="number" class="lotto-input win-num" min="1" max="45">
+                <input type="number" class="lotto-input win-num" min="1" max="45">
+                <input type="number" class="lotto-input win-num" min="1" max="45">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label class="input-label" style="text-align: center; color: #b91c1c;">보너스 번호</label>
+            <div class="lotto-inputs">
+                <input type="number" id="bonus-num" class="lotto-input bonus" min="1" max="45">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label class="input-label" style="text-align: center;">추첨일 (기준 날짜)</label>
+            <input type="date" id="draw-date" class="input-field date-input">
+        </div>
+
+        <div class="button-group" style="margin-top: 2rem;">
+            <button id="btn-register" class="btn btn-primary">등록하기</button>
+            <a href="winning-lotto.html" class="btn btn-secondary">취소</a>
+        </div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <p>Copyright &copy; 2025 Im-minji</p>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // 오늘 날짜 기본 세팅
+        document.getElementById('draw-date').value = new Date().toISOString().split('T')[0];
+
+        document.getElementById('btn-register').addEventListener('click', async () => {
+            const winNumInputs = document.querySelectorAll('.win-num');
+            const bonusInput = document.getElementById('bonus-num');
+            const dateInput = document.getElementById('draw-date');
+
+            // 값 수집
+            const numbers = Array.from(winNumInputs).map(i => parseInt(i.value));
+            const bonusNum = parseInt(bonusInput.value);
+            const drawDate = dateInput.value;
+
+            // 유효성 검사
+            if (numbers.some(isNaN) || isNaN(bonusNum) || !drawDate) {
+                alert('모든 번호와 날짜를 입력해주세요.');
+                return;
+            }
+
+            // 중복 검사 (Client Side)
+            if (new Set(numbers).size !== 6) {
+                alert('당첨 번호 6개는 중복될 수 없습니다.');
+                return;
+            }
+
+            try {
+                // [API 호출] 당첨 번호 등록
+                const response = await fetch('/im-minji/winning-lotto', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ numbers, bonusNum, drawDate })
+                });
+
+                if (!response.ok) throw new Error('등록에 실패했습니다.');
+
+                alert('성공적으로 등록되었습니다!');
+                // 목록 페이지로 이동
+                window.location.href = 'winning-lotto.html';
+
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>당첨 결과 상세</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="my-lotto.html" class="nav-link">MyLotto</a>
+            <a href="random-lotto.html" class="nav-link">RandomLotto</a>
+            <a href="purchased-lotto.html" class="nav-link">PurchasedLotto</a>
+            <a href="winning-lotto.html" class="nav-link active">WinningResult</a>
+        </div>
+        <a href="index.html" class="nav-link">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1V9a1 1 0 011-1h2a1 1 0 011 1v10a1 1 0 001 1m-6 0h6" />
+            </svg>
+        </a>
+    </nav>
+</header>
+
+<main class="main-content">
+    <h1 class="content-title">당첨 결과 상세</h1>
+    <p id="date-info" class="content-subtitle">결과를 불러오는 중...</p>
+
+    <div id="result-area" class="hidden">
+
+        <div style="display: flex; justify-content: space-around; background: #f0f9ff; padding: 20px; border-radius: 10px; margin-bottom: 30px; border: 1px solid #bae6fd; max-width: 800px; margin-left: auto; margin-right: auto;">
+            <div>
+                <p style="font-size: 0.9rem; color: #555; margin-bottom: 5px;">총 구매 금액</p>
+                <p id="total-purchase" style="font-size: 1.2rem; font-weight: bold;">0원</p>
+            </div>
+            <div>
+                <p style="font-size: 0.9rem; color: #555; margin-bottom: 5px;">총 당첨 금액</p>
+                <p id="total-win" style="font-size: 1.2rem; font-weight: bold; color: #003458;">0원</p>
+            </div>
+            <div>
+                <p style="font-size: 0.9rem; color: #555; margin-bottom: 5px;">수익률 (ROI)</p>
+                <p id="roi" style="font-size: 1.5rem; font-weight: bold; color: #d9534f;">0.0%</p>
+            </div>
+        </div>
+
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h3 style="text-align: left; margin-bottom: 10px;">📊 등수별 합계</h3>
+            <table class="stat-table">
+                <thead>
+                <tr>
+                    <th>등수</th>
+                    <th>당첨 개수</th>
+                    <th>상금</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>1등</td><td id="count-FIRST">0개</td><td>20억</td></tr>
+                <tr><td>2등</td><td id="count-SECOND">0개</td><td>3,000만</td></tr>
+                <tr><td>3등</td><td id="count-THIRD">0개</td><td>150만</td></tr>
+                <tr><td>4등</td><td id="count-FOURTH">0개</td><td>5만</td></tr>
+                <tr><td>5등</td><td id="count-FIFTH">0개</td><td>5천</td></tr>
+                <tr><td>꽝</td><td id="count-NONE" style="color:#aaa;">0개</td><td>0원</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="max-width: 800px; margin: 40px auto 0 auto;">
+            <h3 style="text-align: left; margin-bottom: 10px;">이번 주 구매 로또 상세 결과</h3>
+            <table class="lotto-table">
+                <thead>
+                <tr>
+                    <th>구매일</th>
+                    <th>로또 번호</th>
+                    <th>결과</th>
+                </tr>
+                </thead>
+                <tbody id="detail-list-body">
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 3rem;">
+            <a href="winning-lotto.html" class="btn btn-secondary">목록으로 돌아가기</a>
+        </div>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <p>Copyright &copy; 2025 Im-minji</p>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        // URL 파라미터에서 날짜 추출
+        const params = new URLSearchParams(window.location.search);
+        const date = params.get('date'); // ?date=2025-11-19
+
+        if (!date) {
+            alert('잘못된 접근입니다.');
+            window.location.href = 'winning-lotto.html';
+            return;
+        }
+
+        document.getElementById('date-info').innerText = `기준일: ${date} 주차의 결과입니다.`;
+
+        try {
+            // 통계 조회
+            const response = await fetch(`/im-minji/statistics?date=${date}`);
+
+            if (!response.ok) {
+                // 해당 날짜에 당첨 번호가 없거나 구매 내역 조회 실패 시
+                throw new Error('결과를 불러올 수 없습니다.');
+            }
+
+            const data = await response.json();
+            renderResults(data);
+
+        } catch (error) {
+            alert(error.message);
+            document.getElementById('date-info').innerText = "데이터 조회 실패";
+        }
+    });
+
+    function renderResults(data) {
+        const formatter = new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' });
+
+        // 영역 표시
+        document.getElementById('result-area').classList.remove('hidden');
+
+        // 1. 요약 정보 바인딩
+        document.getElementById('total-purchase').innerText = formatter.format(data.totalPurchaseAmount);
+        document.getElementById('total-win').innerText = formatter.format(data.totalWinningMoney);
+        document.getElementById('roi').innerText = data.rateOfReturn.toFixed(1) + '%';
+
+        // 2. 등수별 카운트 바인딩
+        const ranks = ['FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'NONE'];
+        ranks.forEach(rank => {
+            const el = document.getElementById(`count-${rank}`);
+            if (el) el.innerText = (data.rankCounts[rank] || 0) + '개';
+        });
+
+        // 3. 상세 로또 리스트 바인딩 (lottoResults 사용)
+        const tbody = document.getElementById('detail-list-body');
+        tbody.innerHTML = '';
+
+        if (!data.lottoResults || data.lottoResults.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3">해당 주차에 구매한 로또가 없습니다.</td></tr>';
+            return;
+        }
+
+        data.lottoResults.forEach(ticket => {
+            const tr = document.createElement('tr');
+
+            let badge = `<span style="color: #aaa;">꽝</span>`;
+            if (ticket.rank === 'FIRST') badge = `<span style="color: red; font-weight: bold;">1등</span>`;
+            else if (ticket.rank === 'SECOND') badge = `<span style="color: orange; font-weight: bold;">2등</span>`;
+            else if (ticket.rank === 'THIRD') badge = `<span style="color: gold; font-weight: bold;">3등</span>`;
+            else if (ticket.rank === 'FOURTH') badge = `<span style="color: blue; font-weight: bold;">4등</span>`;
+            else if (ticket.rank === 'FIFTH') badge = `<span style="color: green; font-weight: bold;">5등</span>`;
+
+            tr.innerHTML = `
+                <td>${ticket.purchaseDate}</td>
+                <td style="letter-spacing: 1px;">${ticket.numbers.join(', ')}</td>
+                <td>${badge}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+</script>
+</body>
+</html>
