@@ -5,9 +5,12 @@ import com.woowa.lotto.dto.request.PurchasedLottoRequestDTO;
 import com.woowa.lotto.dto.response.MyLottoResponseDTO;
 import com.woowa.lotto.dto.response.PurchasedLottoResponseDTO;
 import com.woowa.lotto.dto.response.RandomLottoResponseDTO;
+import com.woowa.lotto.dto.response.WinningLottoResponseDTO;
 import com.woowa.lotto.service.LottoService;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,6 +89,12 @@ public class LottoController {
     @GetMapping("/statistics")
     public ResponseEntity<StatisticsResponseDTO> getStatistics(@RequestParam("date") LocalDate date) {
         return ResponseEntity.ok(lottoService.getStatistics(date));
+    }
+
+    // 당첨 번호 목록 조회
+    @GetMapping("/winning-lotto")
+    public ResponseEntity<List<WinningLottoResponseDTO>> getWinningLottoList() {
+        return ResponseEntity.ok(lottoService.findAllWinningLottos());
     }
 
 }
